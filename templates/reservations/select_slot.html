@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="get">
+    <h2>Pilih Tanggal Kunjungan</h2>
+    <label for="date">Tanggal:</label>
+    <input type="date" name="date" id="date" required>
+    <button type="submit">Cari Ketersediaan</button>
+</form>
+
+{% if available_slots %}
+    <form method="post">
+        {% csrf_token %}
+        <h2>Time Slots Tersedia</h2>
+        {% for slot in available_slots %}
+            <div>
+                <input type="checkbox" name="time_slots" value="{{ slot.id }}">
+                {{ slot.start_time }} - {{ slot.end_time }}
+            </div>
+        {% endfor %}
+
+        <div>
+          <strong>Total Harga:</strong> <span id="total-price">Rp0</span>
+        </div>
+        <input type="hidden" id="price-per-hour" value="{{ field.price_per_hour }}">
+
+        <button type="submit">Lanjutkan</button>
+    </form>
+{% endif %}
+{% endblock content %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const pricePerHour = parseFloat(document.getElementById('price-per-hour').value);
+    const checkboxes = document.querySelectorAll('input[name="time_slots"]');
+    const totalPriceDisplay = document.getElementById('total-price');
+
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function () {
+        const selectedSlots = Array.from(checkboxes)
+          .filter(cb => cb.checked)
+          .map(cb => cb.value);
+
+        const totalHours = selectedSlots.length;
+        const totalPrice = pricePerHour * totalHours;
+
+        totalPriceDisplay.textContent = `Rp${totalPrice.toLocaleString()}`;
+      });
+    });
+  });
+</script>
