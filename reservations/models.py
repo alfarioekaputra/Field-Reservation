@@ -21,7 +21,7 @@ class Reservation(models.Model):
   user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
   field = models.ForeignKey(Field, on_delete=models.CASCADE)
   date = models.DateField()
-  time_slots = models.ForeignKey(TimeSlot, on_delete=models.CASCADE)
+  time_slots = models.ManyToManyField(TimeSlot)
   total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
   status = models.CharField(max_length=50, default='pending')
 
