@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Konfirmasi Reservasi</h2>
+
+<p>Lapangan: {{ reservation.field.name }}</p>
+<p>Tanggal: {{ reservation.date }}</p>
+<p>Time Slots:</p>
+<ul>
+    {% for slot in reservation.time_slots.all %}
+        <li>{{ slot.start_time }} - {{ slot.end_time }}</li>
+    {% endfor %}
+</ul>
+<p>Total Durasi: {{ reservation.time_slots.count }} Jam</p>
+<p>Total Harga: Rp{{ reservation.total_price }}</p>
+
+<form action="/payment/" method="post">
+    {% csrf_token %}
+    <button type="submit">Konfirmasi dan Lanjutkan Pembayaran</button>
+</form>
+{% endblock content %}

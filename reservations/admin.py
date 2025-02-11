@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 
-from reservations.models import Field
+from reservations.models import Field, TimeSlot
+
 
 # Register your models here.
 @admin.register(Field)
@@ -19,3 +20,7 @@ class FieldAdmin(admin.ModelAdmin):
   
   fields = ['name', 'type', 'price_per_hour', 'image']
   list_display = ['name', 'type', 'price_per_hour2', 'image_tag']
+
+@admin.register(TimeSlot)
+class TimeSlotAdmin(admin.ModelAdmin):
+  pass

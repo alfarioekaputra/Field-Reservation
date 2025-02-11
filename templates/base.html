@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Field Reservation</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"
+    >
+
+    <style>
+        .field-card {
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        .field-card:hover {
+            transform: translateY(-5px);
+        }
+        .price-tag {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3273dc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <strong>LapanganKu</strong>
+            </a>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-end">
+                <a class="navbar-item" href="/login">Login</a>
+                <a class="navbar-item" href="/register">Register</a>
+            </div>
+        </div>
+    </nav>
+    {% block content %}{% endblock content %}
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>LapanganKu</strong> by <a href="#">Your Company</a>. All rights reserved.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

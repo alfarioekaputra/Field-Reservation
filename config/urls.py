@@ -17,8 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings 
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
+
+from reservations.views import ConfirmReservationView, SelectSlotView
 
 urlpatterns = [
+    path('', include('landing_page.urls')),
     path('admin/', admin.site.urls),
+    path('field/<int:field_id>/select-slot/', SelectSlotView.as_view(), name='select_slot'),
+    path('reservation/<int:reservation_id>/confirm/', ConfirmReservationView.as_view(), name='confirm_reservation'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

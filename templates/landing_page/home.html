@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load l10n %}
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero is-medium is-info">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title is-1">Temukan Lapangan Olahraga Terbaik</h1>
+                <p class="subtitle is-4">Reservasi mudah, cepat, dan aman untuk semua kebutuhan olahraga Anda.</p>
+            </div>
+        </div>
+    </section>
+    <!-- Daftar Lapangan -->
+    <section class="section">
+        <div class="container">
+            <h2 class="title has-text-centered">Daftar Lapangan</h2>
+            <div class="columns is-multiline">
+                <!-- Card untuk setiap lapangan -->
+                {% for field in fields %}
+                    <div class="column is-one-third">
+                        <div class="card field-card">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    <img src="{{field.image.url}}" alt="{{field.name}}"/>
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <div class="media">
+                                    <div class="media-content">
+                                        <p class="title is-4">{{field.name}}</p>
+                                        <p class="subtitle is-6">Tipe: {{field.type}}</p>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <p>Harga per jam: <span class="price-tag">Rp{{field.price_per_hour|intcomma}}</span></p>
+                                    <a href="/field/{{field.id}}/select-slot" class="button is-primary is-fullwidth">Pilih Lapangan</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock content %}

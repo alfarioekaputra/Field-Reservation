@@ -21,12 +21,12 @@ class Reservation(models.Model):
   user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
   field = models.ForeignKey(Field, on_delete=models.CASCADE)
   date = models.DateField()
-  time_slot = models.ForeignKey(TimeSlot, on_delete=models.CASCADE)
+  time_slots = models.ForeignKey(TimeSlot, on_delete=models.CASCADE)
   total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
   status = models.CharField(max_length=50, default='pending')
 
   def calculate_total_price(self):
-    duration_hours = self.time_slot.count() # hitung jumlah time slot
+    duration_hours = self.time_slots.count() # hitung jumlah time slot
     self.total_price = self.field.price_per_hour * duration_hours
     self.save()
 
