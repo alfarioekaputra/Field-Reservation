@@ -1,4 +1,5 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, FormView, DetailView
 from django.urls import reverse, reverse_lazy
 
@@ -38,40 +39,37 @@ class SelectSlotView(FormView):
       return context
 
 
-    def form_valid(self, form):
-      field_id = self.kwargs['field_id']
-      field = get_object_or_404(Field, id=field_id)
-      selected_date = self.request.GET.get('date')
-      selected_time_slots = self.request.POST.getlist('time_slots')
+@login_required  # Pastikan pengguna sudah login
+def save_reservation(request, field_id):
+    field = get_object_or_404(Field, id=field_id)
 
-      print("Selected Date:", selected_date)  # Debugging
-      print("Selected Time Slots:", selected_time_slots)  # Debugging
+    if request.method == 'POST':
+        selected_date = request.POST.get('selected_date')
+        selected_time_slots = request.POST.getlist('time_slots')
 
-      # Validasi ketersediaan time slot
-      reserved_slots = Reservation.objects.filter(
-        field=field,
-        date=selected_date,
-        time_slots__id__in=selected_time_slots
-      ).values_list('time_slots__id', flat=True)
+        # Validasi ketersediaan time slot
+        reserved_slots = Reservation.objects.filter(
+            field=field,
+            date=selected_date,
+            time_slots__id__in=selected_time_slots
+        ).values_list('time_slots__id', flat=True)
 
-      print("reserved_slots:", reserved_slots)  # Debugging
+        unavailable_slots = set(selected_time_slots).intersection(reserved_slots)
+        if unavailable_slots:
+            return render(request, 'reservations/error.html', {'message': 'Beberapa time slot tidak tersedia.'})
 
-      unavailable_slots = set(selected_time_slots).intersection(reserved_slots)
-      if unavailable_slots:
-        form.add_error(None, 'Beberapa time slot tidak tersedia.')
-        return self.form_invalid(form)
+        # Simpan reservasi
+        reservation = Reservation.objects.create(
+            user=request.user,
+            field=field,
+            date=selected_date
+        )
+        reservation.time_slots.set(selected_time_slots)
+        reservation.calculate_total_price()
 
-      # Simpan reservasi sementara
-      reservation = Reservation.objects.create(
-        user=self.request.user,
-        field=field,
-        date=selected_date
-      )
-      reservation.time_slots.set(selected_time_slots)
-      reservation.calculate_total_price()
+        return redirect(reverse('confirm_reservation', kwargs={'reservation_id': reservation.id}))
 
-      self.success_url = reverse_lazy('confirm_reservation', kwargs={'reservation_id': reservation.id})
-      return super().form_valid(form)
+    return redirect('select_slot', field_id=field_id)
 
 
 class ConfirmReservationView(DetailView):

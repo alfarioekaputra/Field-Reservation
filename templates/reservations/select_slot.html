@@ -19,7 +19,7 @@
             </form>
 
             {% if available_slots %}
-            <form method="post" class="form-control">
+            <form method="post" action="{% url 'save_reservation' field.id %}" class="form-control">
                 {% csrf_token %}
                 <strong>Time Slots Tersedia</strong>
                 {% for slot in available_slots %}
@@ -32,10 +32,13 @@
                 <div class="mt-4 mb-4">
                     <strong>Total Harga:</strong> <span id="total-price">Rp0</span>
                 </div>
+                <input type="hiddne" name="selected_date" value="{{ selected_date|default_if_none:'' }}">
                 <input type="hidden" id="price-per-hour" value="{{ field.price_per_hour }}">
 
                 <button class="btn btn-primary" type="submit">Lanjutkan</button>
             </form>
+            {% else %}
+                <p>Tidak ada time slot tersedia untuk tanggal ini.</p>
             {% endif %}
         </div>
     </div>
