@@ -19,11 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 
-from reservations.views import ConfirmReservationView, SelectSlotView
+from reservations.views import ConfirmReservationView, SelectSlotView, save_reservation
+from core.views import user_login, logout_user
 
 urlpatterns = [
-    path('', include('landing_page.urls')),
+    path('', include('core.urls')),
     path('admin/', admin.site.urls),
     path('field/<int:field_id>/select-slot/', SelectSlotView.as_view(), name='select_slot'),
+    path('field/<int:field_id>/save-reservation/', save_reservation, name='save_reservation'),
     path('reservation/<int:reservation_id>/confirm/', ConfirmReservationView.as_view(), name='confirm_reservation'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -57,8 +57,38 @@
         </ul>
       </div>
       <div class="navbar-end">
-        <a class="btn mr-3">Masuk</a>
-        <a class="btn btn-primary">Daftar</a>
+        {% if user.is_authenticated %}
+          <div class="dropdown dropdown-end text-black">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+              <div class="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src="https://ui-avatars.com/api/?name={{user.username}}" />
+              </div>
+            </div>
+            <ul
+              tabindex="0"
+              class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+              <li>
+                <a class="justify-between">
+                  Profile
+                  <span class="badge">New</span>
+                </a>
+              </li>
+              <li><a>Settings</a></li>
+              <li>
+                <form action="{% url 'logout' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit">Logout</button>
+                </form>
+              </li>
+            </ul>
+          </div>
+
+        {% else %}
+          <a href="{% url 'login' %}" class="btn mr-3">Masuk</a>
+          <a class="btn btn-primary">Daftar</a>
+        {% endif %}
       </div>
     </div>
 
