@@ -8,7 +8,7 @@ from .models import Field, TimeSlot, Reservation
 class SelectSlotView(FormView):
     template_name = 'reservations/select_slot.html'
     form_class = ReserVationForm
-    success_url = 'reservations/confirm-reservation/'  # Ganti dengan URL sesuai kebutuhan
+    success_url = 'confirm-reservation/'  # Ganti dengan URL sesuai kebutuhan
 
     def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -70,7 +70,7 @@ class SelectSlotView(FormView):
       reservation.time_slots.set(selected_time_slots)
       reservation.calculate_total_price()
 
-      self.success_url = reverse_lazy('reservations/confirm_reservation', kwargs={'reservation_id': reservation.id})
+      self.success_url = reverse_lazy('confirm_reservation', kwargs={'reservation_id': reservation.id})
       return super().form_valid(form)
 
 
